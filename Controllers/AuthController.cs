@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public ActionResult<User> Register(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -32,7 +32,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> LogIn(UserDto request)
+        public ActionResult<string> LogIn(UserDto request)
         {
             if (user.UserName != request.UserName)
             {
@@ -44,7 +44,7 @@ namespace API.Controllers
                 return BadRequest("Wrong password!");
             }
             string token = CreateToken(user);
-            return Ok("My token");
+            return Ok(token);
         }
 
         private string CreateToken(User user)
