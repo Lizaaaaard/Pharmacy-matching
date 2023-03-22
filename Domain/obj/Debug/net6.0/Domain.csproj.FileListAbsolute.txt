@@ -1,0 +1,14 @@
+D:\c#\Domain\bin\Debug\net6.0\Domain.deps.json
+D:\c#\Domain\bin\Debug\net6.0\Domain.runtimeconfig.json
+D:\c#\Domain\bin\Debug\net6.0\Domain.dll
+D:\c#\Domain\bin\Debug\net6.0\Domain.pdb
+D:\c#\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+D:\c#\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+D:\c#\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+D:\c#\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+D:\c#\Domain\obj\Debug\net6.0\Domain.dll
+D:\c#\Domain\obj\Debug\net6.0\refint\Domain.dll
+D:\c#\Domain\obj\Debug\net6.0\Domain.pdb
+D:\c#\Domain\obj\Debug\net6.0\Domain.genruntimeconfig.cache
+D:\c#\Domain\obj\Debug\net6.0\ref\Domain.dll
