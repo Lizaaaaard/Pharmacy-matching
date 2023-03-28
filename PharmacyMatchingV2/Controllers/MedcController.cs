@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Persistance.Repositories;
+using Persistance.Repositories.Medc;
 
 namespace API.Controllers
 {
@@ -8,10 +8,10 @@ namespace API.Controllers
     [ApiController]
     public class MedcController : ControllerBase
     {
-        private readonly IRepository _repository;
+        private readonly IMedcRepo _repository;
         // private AppDbContext context;
 
-        public MedcController(IRepository repository)
+        public MedcController(IMedcRepo repository)
         {
             _repository = repository;
         }
@@ -38,8 +38,7 @@ namespace API.Controllers
                 Description = medicine.Description,
                 IsPrescription = medicine.IsPrescription,
                 ProducerCountry = medicine.ProducerCountry,
-                ProducerCompanyName = medicine.ProducerCompanyName,
-                ReleaseForm = medicine.ReleaseForm
+                ProducerCompanyName = medicine.ProducerCompanyName
             };
 
             _repository.AddMedicine(medc);

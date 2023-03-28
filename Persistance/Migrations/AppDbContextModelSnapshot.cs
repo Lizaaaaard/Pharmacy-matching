@@ -29,16 +29,13 @@ namespace Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Package")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("ReleaseForm")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -48,64 +45,62 @@ namespace Persistance.Migrations
                         new
                         {
                             Id = 1,
-                            Amount = 4,
-                            Package = "tablets 50mg in pack no.30",
-                            Price = 8.25m
+                            Package = "tablets 50mg in pack no.40",
+                            ReleaseForm = "tablets"
                         },
                         new
                         {
                             Id = 2,
-                            Amount = 2,
-                            Package = "tablets 100mg in pack no.60",
-                            Price = 13.99m
+                            Package = "syrop 1000ml in pack",
+                            ReleaseForm = "syrop"
                         },
                         new
                         {
                             Id = 3,
-                            Amount = 11,
-                            Package = "tablets 50mg in pack no.30",
-                            Price = 8.25m
+                            Package = "capsules 50mg in pack no.25",
+                            ReleaseForm = "capsules"
                         },
                         new
                         {
                             Id = 4,
-                            Amount = 8,
                             Package = "tablets 100mg in pack no.60",
-                            Price = 14.14m
+                            ReleaseForm = "tablets"
                         },
                         new
                         {
                             Id = 5,
-                            Amount = 1,
-                            Package = "tablets 150mg in pack no.70",
-                            Price = 4.99m
+                            Package = "capsules 150mg in pack no.70",
+                            ReleaseForm = "capsules"
                         },
                         new
                         {
                             Id = 6,
-                            Amount = 0,
-                            Package = "tablets 100mg in pack no.60",
-                            Price = 7m
+                            Package = "tablets 100mg in pack no.40",
+                            ReleaseForm = "tablets"
                         },
                         new
                         {
                             Id = 7,
-                            Amount = 5,
-                            Package = "tablets 50mg in pack no.30",
-                            Price = 10.33m
+                            Package = "tablets 50mg in pack no.35",
+                            ReleaseForm = "tablets"
                         },
                         new
                         {
                             Id = 8,
-                            Amount = 0,
                             Package = "tablets 50mg in pack no.30",
-                            Price = 1.5m
+                            ReleaseForm = "tablets"
                         });
                 });
 
             modelBuilder.Entity("Domain.Entities.MedcToPharm", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
                         .HasColumnType("int");
 
                     b.Property<int>("DoseId")
@@ -117,7 +112,13 @@ namespace Persistance.Migrations
                     b.Property<int>("PharmId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DoseId");
 
                     b.HasIndex("MedcId");
 
@@ -129,51 +130,74 @@ namespace Persistance.Migrations
                         new
                         {
                             Id = 1,
+                            Amount = 17,
                             DoseId = 1,
                             MedcId = 1,
-                            PharmId = 1
+                            PharmId = 1,
+                            Price = 3.9m
                         },
                         new
                         {
                             Id = 2,
+                            Amount = 2,
                             DoseId = 3,
                             MedcId = 1,
-                            PharmId = 1
+                            PharmId = 1,
+                            Price = 10.33m
                         },
                         new
                         {
                             Id = 3,
+                            Amount = 4,
                             DoseId = 1,
                             MedcId = 1,
-                            PharmId = 2
+                            PharmId = 2,
+                            Price = 10.33m
                         },
                         new
                         {
                             Id = 4,
+                            Amount = 11,
                             DoseId = 3,
                             MedcId = 3,
-                            PharmId = 2
+                            PharmId = 2,
+                            Price = 12.5m
                         },
                         new
                         {
                             Id = 5,
+                            Amount = 1,
                             DoseId = 1,
                             MedcId = 2,
-                            PharmId = 2
+                            PharmId = 2,
+                            Price = 4.99m
                         },
                         new
                         {
                             Id = 6,
+                            Amount = 2,
                             DoseId = 1,
                             MedcId = 3,
-                            PharmId = 3
+                            PharmId = 3,
+                            Price = 10m
                         },
                         new
                         {
                             Id = 7,
+                            Amount = 6,
                             DoseId = 1,
                             MedcId = 2,
-                            PharmId = 3
+                            PharmId = 3,
+                            Price = 7.3m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Amount = 0,
+                            DoseId = 1,
+                            MedcId = 2,
+                            PharmId = 1,
+                            Price = 10m
                         });
                 });
 
@@ -204,10 +228,6 @@ namespace Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReleaseForm")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Medicines");
@@ -220,8 +240,7 @@ namespace Persistance.Migrations
                             IsPrescription = false,
                             Name = "Aspirin",
                             ProducerCompanyName = "Zeba",
-                            ProducerCountry = "Germany",
-                            ReleaseForm = "tablets"
+                            ProducerCountry = "Germany"
                         },
                         new
                         {
@@ -230,8 +249,7 @@ namespace Persistance.Migrations
                             IsPrescription = false,
                             Name = "Iodine",
                             ProducerCompanyName = "Beba",
-                            ProducerCountry = "Belarus",
-                            ReleaseForm = "tablets"
+                            ProducerCountry = "Belarus"
                         },
                         new
                         {
@@ -240,8 +258,7 @@ namespace Persistance.Migrations
                             IsPrescription = false,
                             Name = "ibuprofen",
                             ProducerCompanyName = "Maxima",
-                            ProducerCountry = "Germany",
-                            ReleaseForm = "capsules"
+                            ProducerCountry = "Germany"
                         });
                 });
 
@@ -325,32 +342,11 @@ namespace Persistance.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UsersDto");
-                });
-
             modelBuilder.Entity("Domain.Entities.MedcToPharm", b =>
                 {
                     b.HasOne("Domain.Entities.Dose", "Doses")
                         .WithMany("MedcToPharms")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("DoseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

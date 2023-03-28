@@ -18,7 +18,6 @@ namespace Domain.Entities
         
         public string ProducerCompanyName { get; set; } = string.Empty;
         
-        public string ReleaseForm { get; set; } = string.Empty;
 
         public List<Pharmacy> Pharmacies { get; set; } = new List<Pharmacy>();
         

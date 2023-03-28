@@ -8,9 +8,6 @@ public class Dose
     [Key]
     public int Id { get; set; }
     public string Package { get; set; }
-    [Required]
-    [Precision(18, 2)]
-    public decimal Price { get; set; }
-    public int Amount { get; set; }
+    public string ReleaseForm { get; set; } = string.Empty;
     public List<MedcToPharm> MedcToPharms { get; set; } = new List<MedcToPharm>();
 }

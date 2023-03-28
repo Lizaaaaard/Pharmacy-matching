@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Persistance.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using Persistance.Repositories.Medc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IPharmRepo, PharmsRepo>();
+builder.Services.AddScoped<IMedcRepo, MedcRepo>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\c#\\Application\\Application.csproj": {}
+    "D:\\c#\\kursach\\Application\\Application.csproj": {}
   },
   "projects": {
-    "D:\\c#\\Application\\Application.csproj": {
+    "D:\\c#\\kursach\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\c#\\Application\\Application.csproj",
+        "projectUniqueName": "D:\\c#\\kursach\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "D:\\c#\\Application\\Application.csproj",
+        "projectPath": "D:\\c#\\kursach\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\Huawei\\.nuget\\packages\\",
-        "outputPath": "D:\\c#\\Application\\obj\\",
+        "outputPath": "D:\\c#\\kursach\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Huawei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\c#\\Domain\\Domain.csproj": {
-                "projectPath": "D:\\c#\\Domain\\Domain.csproj"
+              "D:\\c#\\kursach\\Domain\\Domain.csproj": {
+                "projectPath": "D:\\c#\\kursach\\Domain\\Domain.csproj"
               }
             }
           }
@@ -47,6 +47,14 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[12.0.1, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.0, )"
             }
           },
           "imports": [
@@ -69,14 +77,14 @@
         }
       }
     },
-    "D:\\c#\\Domain\\Domain.csproj": {
+    "D:\\c#\\kursach\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\c#\\Domain\\Domain.csproj",
+        "projectUniqueName": "D:\\c#\\kursach\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "D:\\c#\\Domain\\Domain.csproj",
+        "projectPath": "D:\\c#\\kursach\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\Huawei\\.nuget\\packages\\",
-        "outputPath": "D:\\c#\\Domain\\obj\\",
+        "outputPath": "D:\\c#\\kursach\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Huawei\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -108,6 +116,14 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[12.0.1, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

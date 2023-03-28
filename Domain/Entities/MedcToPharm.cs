@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities
 {
@@ -12,5 +13,9 @@ namespace Domain.Entities
         public Medicine Medicine { get; set; }
         public int DoseId { get; set; }
         public Dose Doses { get; set; }
+        [Required]
+        [Precision(18, 2)]
+        public decimal Price { get; set; }
+        public int Amount { get; set; }
     }
 }

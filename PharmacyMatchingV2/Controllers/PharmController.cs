@@ -9,10 +9,10 @@ namespace API.Controllers
     [ApiController]
     public class PharmController : ControllerBase
     {
-        private readonly IRepository _repository;
+        private readonly IPharmRepo _repository;
         private AppDbContext context;
 
-        public PharmController(IRepository repository)
+        public PharmController(IPharmRepo repository)
         {
             _repository = repository;
         }
