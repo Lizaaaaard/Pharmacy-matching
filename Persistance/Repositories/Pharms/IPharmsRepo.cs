@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Persistance.Repositories
 {
-    public interface IPharmRepo
+    public interface IPharmsRepo
     {
         Pharmacy GetPharmacy(int id);
         List<Pharmacy> GetAllPharmacies();

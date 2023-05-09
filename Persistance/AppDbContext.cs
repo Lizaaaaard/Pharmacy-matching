@@ -1,16 +1,19 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistance
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<Pharmacy> Pharmacies { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
-        public DbSet<User> Users { get; set; }
-        // public DbSet<UserDto> UsersDto { get; set; }
         public DbSet<MedcToPharm> MedcToPharms { get; set; }
         public DbSet<Dose> Doses { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -19,6 +22,7 @@ namespace Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Pharmacy>()
                 .HasMany(m => m.Medicines)
                 .WithMany(p => p.Pharmacies)
@@ -124,8 +128,7 @@ namespace Persistance
                 {
                     Id = 1,
                     Name = "Aspirin",
-                    Description =
-                        "It is most commonly used as a pain killer, or to reduce fever or inflammation. It also has an anti-platelet effect - it reduces the number of platelets in the blood which reduces blood clotting- in that function it is used to prevent heart attacks.",
+                    Description = "It is most commonly used as a pain killer, or to reduce fever or inflammation.",
                     IsPrescription = false,
                     ProducerCountry = "Germany",
                     ProducerCompanyName = "Zeba"
@@ -134,8 +137,7 @@ namespace Persistance
                 {
                     Id = 2,
                     Name = "Iodine",
-                    Description =
-                        "Pharmacological group of the substance Iodine:macro- and microelements, antiseptics and disinfectants, local irritating agents in combinations, other hypolipidemic agents",
+                    Description = "Pharmacological group of the substance Iodine: antiseptics and disinfectants, local irritating agents",
                     IsPrescription = false,
                     ProducerCountry = "Belarus",
                     ProducerCompanyName = "Beba"
@@ -144,8 +146,7 @@ namespace Persistance
                 {
                     Id = 3,
                     Name = "ibuprofen",
-                    Description =
-                        "Ibuprofen has a rapid analgesic, antipyretic and anti-inflammatory effect. In addition, ibuprofen reversibly inhibits platelet aggregation.",
+                    Description = "Ibuprofen has a rapid analgesic, antipyretic and anti-inflammatory effect.",
                     IsPrescription = false,
                     ProducerCountry = "Germany",
                     ProducerCompanyName = "Maxima"
@@ -225,6 +226,20 @@ namespace Persistance
                     Amount = 0
                 }
             );
+            modelBuilder.Entity<Order>().HasKey(o => o.Id);
+            modelBuilder.Entity<Order>()
+                .HasOne(m => m.MedcToPharm)
+                .WithMany(o => o.Orders)
+                .HasForeignKey(o => o.MedcToPharmId);
+            modelBuilder.Entity<Cart>().HasKey(c => c.Id);
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.Order)
+                .WithMany(o => o.Carts)
+                .HasForeignKey(o => o.OrderId);
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.Booking)
+                .WithMany(b => b.Carts)
+                .HasForeignKey(b => b.BookingId);
         }
 
     }

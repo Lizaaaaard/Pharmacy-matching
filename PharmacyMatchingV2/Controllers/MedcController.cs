@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistance.Repositories.Medc;
 
@@ -22,6 +23,20 @@ namespace API.Controllers
             return _repository.GetAllMedicines();
         }
 
+        [HttpGet("medicinesByPage")]
+        public ActionResult<List<MedicineDto>> GetMedicines(int page, int limit)
+        {
+            return _repository.GetMedicines(page, limit);
+        }
+
+
+        [HttpGet("medicines/count")]
+        public ActionResult<int> GetTotalCount()
+        {
+            return _repository.GetAllMedicines().Count;
+        }
+
+        [Authorize]
         [HttpGet("medicines/{medcId}")]
         public ActionResult<Medicine> GetMedicine(int medcId)
         {

@@ -29,6 +29,8 @@ public class MedcRepo : IMedcRepo
         _ctx = ctx;
     }
 
+    
+
     void IMedcRepo.AddMedicine(Medicine medicine)
     {
         _ctx.Medicines.Add(medicine);
@@ -43,7 +45,6 @@ public class MedcRepo : IMedcRepo
     {
         var medicines = from medc in _ctx.Medicines
             join mtp in _ctx.MedcToPharms on medc.Id equals mtp.MedcId
-            where mtp.Amount > 0
             join d in _ctx.Doses on mtp.DoseId equals d.Id
             select new
             {
@@ -62,7 +63,6 @@ public class MedcRepo : IMedcRepo
                 DoseId = t1.d.Id,
                 t1.d.Package,
                 t1.medc.IsPrescription
-                
             } 
             into pg
             select new MedicineDose(){
@@ -75,7 +75,7 @@ public class MedcRepo : IMedcRepo
                 Package = pg.Key.Package,
                 minPrice = pg.Min( p => p.mtp.Price),
                 maxPrice = pg.Max(p => p.mtp.Price),
-                Availability = pg.Count(),
+                Availability = pg.Count(p => p.mtp.Amount>0),
                 needPrescription = pg.Key.IsPrescription
             };
 
@@ -97,7 +97,16 @@ public class MedcRepo : IMedcRepo
         }
         return medicineDtoList;
     }
-
+    
+    public List<MedicineDto> GetMedicines(int page, int limit)
+    {
+        var skipCount = (page - 1) * limit;
+        return GetAllMedicines()
+                    .Skip(skipCount)
+                    .Take(limit)
+                    .ToList();
+    }
+    
     void IMedcRepo.RemoveMedicine(int id)
     {
         _ctx.Remove(_ctx.Medicines.FirstOrDefault(p => p.Id == id));

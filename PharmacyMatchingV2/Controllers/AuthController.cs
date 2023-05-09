@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Servicies;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,51 +8,44 @@ using System.Security.Cryptography;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("PharmacyMatching")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
         private readonly IConfiguration _configuration;
+        private readonly UserService _userService;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, UserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(RegisterDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.UserName = request.UserName;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-
-            return Ok(user);
+            var result = await _userService.CreateUserAsync(request);
+            return Ok(request);
         }
 
         [HttpPost("login")]
-        public ActionResult<string> LogIn(UserDto request)
+        public async Task<ActionResult> LogIn(LoginDto request)
         {
-            if (user.UserName != request.UserName)
+            if (await _userService.VerifyPasswordAsync(request))
             {
-                return BadRequest("User not found.");
+                string token = CreateToken(request.UserName);
+                return Ok(token);
             }
-
-            if (!VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return BadRequest("Wrong password!");
-            }
-            string token = CreateToken(user);
-            return Ok(token);
+            return BadRequest("Incorrect password or user not found.");
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(string userName)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, userName)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

@@ -1,11 +1,15 @@
 using API.Configurations;
+using Application.Servicies;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Persistance;
 using Persistance.Repositories;
+using Persistance.Repositories.Medc;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
-using Persistance.Repositories.Medc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +17,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IPharmRepo, PharmsRepo>();
+
+builder.Services.AddPersistence(builder.Configuration);
+
+builder.Services.AddScoped<IPharmsRepo, PharmsRepo>();
 builder.Services.AddScoped<IMedcRepo, MedcRepo>();
+builder.Services.AddScoped<IMedcToPharmRepo, MedcToPharmRepo>();
+/*builder.Services.AddIdentity<User, IdentityRole>();*/
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddScoped<UserManager<User>>();
+builder.Services.AddScoped<SignInManager<User>>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CartService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -52,8 +73,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
-
-builder.Services.AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 

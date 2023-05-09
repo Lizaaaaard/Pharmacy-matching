@@ -17,5 +17,6 @@ namespace Domain.Entities
         [Precision(18, 2)]
         public decimal Price { get; set; }
         public int Amount { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>();
     }
 }

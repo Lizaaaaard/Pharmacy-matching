@@ -28,3 +28,5 @@ D:\c#\kursach\Application\obj\Debug\net6.0\Application.dll
 D:\c#\kursach\Application\obj\Debug\net6.0\refint\Application.dll
 D:\c#\kursach\Application\obj\Debug\net6.0\Application.pdb
 D:\c#\kursach\Application\obj\Debug\net6.0\ref\Application.dll
+D:\c#\kursach\Application\bin\Debug\net6.0\Persistance.dll
+D:\c#\kursach\Application\bin\Debug\net6.0\Persistance.pdb

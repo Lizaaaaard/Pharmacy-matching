@@ -9,10 +9,10 @@ namespace API.Controllers
     [ApiController]
     public class PharmController : ControllerBase
     {
-        private readonly IPharmRepo _repository;
+        private readonly IPharmsRepo _repository;
         private AppDbContext context;
 
-        public PharmController(IPharmRepo repository)
+        public PharmController(IPharmsRepo repository)
         {
             _repository = repository;
         }
@@ -29,7 +29,7 @@ namespace API.Controllers
             return _repository.GetPharmacy(pharmId);
         }
 
-        [HttpPost("pharmacies/add")]
+        [HttpPost("pharmacies")]
         public void AddPharmacy(Pharmacy pharmacy)
         {
             var pharm = new Pharmacy()
