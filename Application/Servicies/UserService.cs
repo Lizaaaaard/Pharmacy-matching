@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.IdentityModel.Tokens;
 using Persistance;
 
 namespace Application.Servicies;
@@ -43,13 +45,50 @@ public class UserService
 
     }
 
-    public async Task<bool> VerifyPasswordAsync(LoginDto loginForm)
+    public async Task<Tuple<User, bool>> VerifyPasswordAsync(LoginDto loginForm)
     {
         User user = _context.Users.SingleOrDefault(x => x.UserName == loginForm.UserName);
         if (user == null)
-            return false;
+            return Tuple.Create(user, false);
         await _signInManager.PasswordSignInAsync(user, loginForm.Password, true, false);
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginForm.Password, false);
-        return result.Succeeded;
+        return Tuple.Create(user, result.Succeeded);
+    }
+
+    public UserDto GetUser(string login)
+    {
+        User user = _context.Users.SingleOrDefault(x => x.UserName == login);
+        var result = new UserDto()
+        {
+            Id = user.Id,
+            Login = user.UserName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber
+        };
+        return result;
+    }
+    
+    public async Task<string> GetUserRoleAsync(User user)
+    {
+        string result = (await _userManager
+                .GetRolesAsync(user))
+            .FirstOrDefault();
+        if (!result.IsNullOrEmpty())
+        {
+            return result;
+        }
+        return "User";
+    }
+
+    public async Task<UserDto> ChangeInfo(UserDto newInfo)
+    {
+        var idUser = newInfo.Id.ToString();
+        var user = await _userManager.FindByIdAsync(idUser);
+        user.UserName = newInfo.Login;
+        user.Email = newInfo.Email;
+        user.PhoneNumber = newInfo.PhoneNumber;
+        var update = await _userManager.UpdateAsync(user);
+        await _context.SaveChangesAsync();
+        return newInfo;
     }
 }

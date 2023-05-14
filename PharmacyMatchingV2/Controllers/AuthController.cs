@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using Microsoft.AspNet.Identity;
 
 namespace API.Controllers
 {
@@ -33,19 +34,22 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LogIn(LoginDto request)
         {
-            if (await _userService.VerifyPasswordAsync(request))
+            Tuple<User, bool> result = await _userService.VerifyPasswordAsync(request);
+            if (result.Item2)
             {
-                string token = CreateToken(request.UserName);
+                string token = await CreateTokenAsync(result.Item1);
                 return Ok(token);
             }
             return BadRequest("Incorrect password or user not found.");
         }
 
-        private string CreateToken(string userName)
+        private async Task<string> CreateTokenAsync(User user)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userName)
+                new Claim("name", user.UserName),
+                new Claim("role", await _userService.GetUserRoleAsync(user)),
+                new Claim("id", user.Id.ToString())
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

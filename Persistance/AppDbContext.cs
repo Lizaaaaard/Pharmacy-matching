@@ -12,7 +12,6 @@ namespace Persistance
         public DbSet<MedcToPharm> MedcToPharms { get; set; }
         public DbSet<Dose> Doses { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Cart> Carts { get; set; }
         public DbSet<Booking> Bookings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -231,14 +230,10 @@ namespace Persistance
                 .HasOne(m => m.MedcToPharm)
                 .WithMany(o => o.Orders)
                 .HasForeignKey(o => o.MedcToPharmId);
-            modelBuilder.Entity<Cart>().HasKey(c => c.Id);
-            modelBuilder.Entity<Cart>()
-                .HasOne(c => c.Order)
-                .WithMany(o => o.Carts)
-                .HasForeignKey(o => o.OrderId);
-            modelBuilder.Entity<Cart>()
+            modelBuilder.Entity<Booking>().HasKey(b => b.Id);
+            modelBuilder.Entity<Order>()
                 .HasOne(c => c.Booking)
-                .WithMany(b => b.Carts)
+                .WithMany(o => o.Orders)
                 .HasForeignKey(b => b.BookingId);
         }
 

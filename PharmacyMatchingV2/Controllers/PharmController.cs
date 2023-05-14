@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistance;
 using Persistance.Repositories;
@@ -30,6 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPost("pharmacies")]
+        /*[Authorize(Roles = "Admin")]*/
         public void AddPharmacy(Pharmacy pharmacy)
         {
             var pharm = new Pharmacy()
@@ -41,7 +43,8 @@ namespace API.Controllers
                 PhoneNumber = pharmacy.PhoneNumber
             };
             
-            _repository.AddPharmacy(pharm);
+           _repository.AddPharmacy(pharm);
+           
         }
     }
 }

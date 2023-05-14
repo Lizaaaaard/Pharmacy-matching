@@ -36,7 +36,7 @@ namespace API.Controllers
             return _repository.GetAllMedicines().Count;
         }
 
-        [Authorize]
+        
         [HttpGet("medicines/{medcId}")]
         public ActionResult<Medicine> GetMedicine(int medcId)
         {

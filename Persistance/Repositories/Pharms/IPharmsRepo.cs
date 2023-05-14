@@ -12,5 +12,7 @@ namespace Persistance.Repositories
         void AddPharmacy(Pharmacy pharmacy);
 
         void UpdatePharmacy(Pharmacy pharm);
+        
+        Task<bool> SaveChangesAsync();
     }
 }

@@ -25,6 +25,7 @@ namespace Persistance.Repositories
         public void AddPharmacy(Pharmacy pharmacy)
         {
             _ctx.Pharmacies.Add(pharmacy);
+            _ctx.SaveChangesAsync();
         }
 
         public List<Pharmacy> GetAllPharmacies()

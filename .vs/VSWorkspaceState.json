@@ -2,6 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\Persistance",
+    "\\Persistance\\Migrations",
     "\\PharmacyMatchingV2",
     "\\PharmacyMatchingV2\\Controllers"
   ],

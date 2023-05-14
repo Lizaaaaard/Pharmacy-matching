@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-//using P;
 using Persistance;
 
 namespace API.Configurations
@@ -10,7 +9,7 @@ namespace API.Configurations
         {
             string connection = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(connection));
+                options.UseSqlServer(connection));
 
             return services;
         }
