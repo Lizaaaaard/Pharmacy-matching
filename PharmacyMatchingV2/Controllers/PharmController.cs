@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPost("pharmacies")]
-        /*[Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         public void AddPharmacy(Pharmacy pharmacy)
         {
             var pharm = new Pharmacy()

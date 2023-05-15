@@ -36,4 +36,16 @@ public class ProfileController: ControllerBase
     {
         return await _bookingService.showHistory(userId);
     }
+    
+    [HttpGet("users/orders")]
+    public async Task<List<HistoryDto>> GetAllUsersOrders()
+    {
+        return await _bookingService.showOrders();
+    }
+
+    [HttpPost("orders")]
+    public async Task ChangeOrderStatus(int bookingId)
+    {
+         await _bookingService.changeStatusAsync(bookingId);
+    }
 }

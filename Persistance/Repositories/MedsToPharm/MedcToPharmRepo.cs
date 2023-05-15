@@ -22,4 +22,9 @@ public class MedcToPharmRepo : IMedcToPharmRepo
             Price = m.Price,
             Amount = m.Amount }).ToList();
     }
+
+    public MedcToPharm GetMedInPharm(int medcInPharm)
+    {
+        return _ctx.MedcToPharms.First(m => m.Id == medcInPharm);
+    }
 }
