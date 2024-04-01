@@ -6,16 +6,6 @@ namespace Persistance.Repositories
 {
     public class PharmsRepo : IPharmsRepo
     {
-        /*private static MapperConfiguration pharmConfig = new MapperConfiguration(cfg => cfg
-            .CreateMap<PharmacyDto, Pharmacy>()
-            .ForMember(ph => ph.Id, act => act.MapFrom(pharm => pharm.pharmId))
-            .ForMember(ph => ph.Name, act => act.MapFrom(pharm => pharm.pharmacyName))
-            .ForMember(ph => ph.Address, act => act.MapFrom(pharm => pharm.address))
-            .ForMember(ph => ph.Description, act => act.MapFrom(pharm => pharm.workingHours))
-            .ForMember(ph => ph.PhoneNumber, act => act.MapFrom(pharm => pharm.phoneNumber))
-        );
-        
-        private Mapper pharmMapper = new Mapper(pharmConfig);*/
         private AppDbContext _ctx;
         public PharmsRepo(AppDbContext ctx)
         {

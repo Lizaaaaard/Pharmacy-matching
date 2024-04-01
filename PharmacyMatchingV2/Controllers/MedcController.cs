@@ -16,7 +16,7 @@ namespace API.Controllers
         {
             _repository = repository;
         }
-
+        
         [HttpGet("medicines")]
         public ActionResult<List<MedicineDto>> GetAllMedicines()
         {

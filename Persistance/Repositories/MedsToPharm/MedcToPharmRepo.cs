@@ -13,7 +13,6 @@ public class MedcToPharmRepo : IMedcToPharmRepo
     
     public List<MedcToPharm> GetAllMedsToPharm()
     {
-        /*return _ctx.MedcToPharms.ToList();*/
         return _ctx.MedcToPharms.Select(m => new MedcToPharm() { 
             Id = m.Id,
             PharmId = m.PharmId,

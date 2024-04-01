@@ -1,11 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Domain",
     "\\Persistance",
     "\\Persistance\\Migrations",
     "\\PharmacyMatchingV2",
     "\\PharmacyMatchingV2\\Controllers"
   ],
-  "SelectedNode": "\\PharmacyMatchingV2\\PharmacyMatchingV2.sln",
+  "SelectedNode": "\\Domain\\Class1.cs",
   "PreviewInSolutionExplorer": false
 }
