@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Servicies;
+using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +12,15 @@ public class RolesController: ControllerBase
 {
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly UserManager<User> _userManager;
+    private readonly UserService _userService;
+    private readonly EmailService _email;
 
-    public RolesController(RoleManager<IdentityRole<int>> roleManager, UserManager<User> userManager)
+    public RolesController(RoleManager<IdentityRole<int>> roleManager, UserManager<User> userManager, UserService userService, EmailService email)
     {
         _roleManager = roleManager;
         _userManager = userManager;
+        _userService = userService;
+        _email = email;
     }
 
     [HttpPost("create")]
@@ -64,4 +70,28 @@ public class RolesController: ControllerBase
         return BadRequest();
     }
 
+    [HttpGet("roles")]
+    public async Task<List<string>> GetRolesList()
+    {
+        return _roleManager.Roles.Select(r => r.Name).ToList();
+    }
+    
+    [HttpGet("users")]
+    public async Task<List<string>> GetUsersList()
+    {
+        return _userManager.Users.Select(u => u.UserName).ToList();
+    }
+
+    [HttpGet("manage/roles")]
+    public async Task<List<RolesDto>> GetUsersWithRoles()
+    {
+        return await _userService.GetListUsersRolesAsync();
+    }
+
+    [HttpPost("manage/roles")]
+    // [Authorize(Roles = "Admin")]
+    public async Task AssignRoleToUser([FromBody]NewUserRoleDto request)
+    {
+        await _userService.AssignRoleAsync(request);
+    }
 }

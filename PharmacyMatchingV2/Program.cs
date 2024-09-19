@@ -11,6 +11,7 @@ using Persistance.Repositories.Medc;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using Persistance.Repositories.Booking;
+using Persistance.Repositories.User;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,7 @@ builder.Services.AddScoped<IPharmsRepo, PharmsRepo>();
 builder.Services.AddScoped<IMedcRepo, MedcRepo>();
 builder.Services.AddScoped<IMedcToPharmRepo, MedcToPharmRepo>();
 builder.Services.AddScoped<IBookingRepo, BookingRepo>();
-/*builder.Services.AddIdentity<User, IdentityRole>();*/
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     {
         options.Password.RequireDigit = false;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

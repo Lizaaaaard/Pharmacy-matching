@@ -1,8 +1,9 @@
-﻿﻿using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Persistance;
+using Persistance.Repositories.User;
 
 namespace Application.Servicies;
 
@@ -10,13 +11,18 @@ public class UserService
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly AppDbContext _context;
+    private readonly IUserRepository _repository;
 
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, AppDbContext context)
+    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, 
+        RoleManager<IdentityRole<int>> roleManager,AppDbContext context, IUserRepository repository)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _roleManager = roleManager;
         _context = context;
+        _repository = repository;
     }
 
     public async Task<bool> CreateUserAsync(RegisterDto regForm)
@@ -91,4 +97,58 @@ public class UserService
         await _context.SaveChangesAsync();
         return newInfo;
     }
+
+    public async Task<List<RolesDto>> GetListUsersRolesAsync()
+    {
+        var list = await (from Users in _context.Users
+                join UserRole in _context.UserRoles on Users.Id equals UserRole.UserId into tmpUR
+                from UserRole in tmpUR.DefaultIfEmpty()
+                join Pharmacy in _context.Pharmacies on UserRole.PharmId equals Pharmacy.Id into tmpPharm
+                from Pharmacy in tmpPharm.DefaultIfEmpty()
+                join Role in _context.Roles on UserRole.RoleId equals Role.Id
+                select new
+                {
+                    UserId = Users.Id,
+                    Role = Role.Name,
+                    UserName = Users.UserName,
+                    AssignDate = UserRole.AssignDate,
+                    Pharmacy = Pharmacy.Name
+                }
+            ).ToListAsync();
+        var result = new List<RolesDto>();
+        foreach (var item in list)
+        {
+            result.Add(new RolesDto()
+            {
+                UserId = item.UserId,
+                UserName = item.UserName,
+                Role = item.Role,
+                AssignDate = item.AssignDate.ToString("d") ,
+                Pharmacy = item.Pharmacy
+            });
+        }
+        return result;
+    }
+
+    public async Task AssignRoleAsync(NewUserRoleDto request)
+    {
+        var assign =  new UserRole()
+        {
+            UserId = request.UserId,
+            RoleId = _roleManager.FindByNameAsync(request.Role).Result.Id,
+            AssignDate =  DateTime.Now,
+            PharmId = request.PharmId == 0 ? null: request.PharmId
+        };
+        await _repository.AddRoleToUser(assign);
+    }
+
+    public async Task<bool> CheckIfUserExist(string name, string email)
+    {
+        var exist = _userManager.Users
+            .Where(u => u.UserName == name || u.Email == email).ToList();
+        if (exist.Count == 0)
+            return false;
+        return true;
+    }
+    
 }

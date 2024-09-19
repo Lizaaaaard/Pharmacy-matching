@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -16,5 +17,7 @@ namespace Domain.Entities
 
         public List<Medicine> Medicines { get; set; } = new List<Medicine>();
         public List<MedcToPharm> MedcToPharms { get; set; } = new List<MedcToPharm>();
+        [ForeignKey("PharmId")]
+        public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }

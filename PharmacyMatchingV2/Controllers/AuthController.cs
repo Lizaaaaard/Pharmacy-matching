@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using Microsoft.AspNet.Identity;
 
 namespace API.Controllers
 {
@@ -25,9 +24,11 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(RegisterDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            var result = await _userService.CreateUserAsync(request);
+            if (!await _userService.CheckIfUserExist(request.UserName, request.Email))
+            {
+                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                var result = await _userService.CreateUserAsync(request);
+            }
             return Ok(request);
         }
 

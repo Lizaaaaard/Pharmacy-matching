@@ -25,7 +25,8 @@ public class CartController : ControllerBase
     public List<Tuple<Pharmacy, List<MedcToPharm>>> processCart([FromBody] List<CartMedicineDto> cartMedc)
     {
         List<Tuple<int, List<MedcToPharm>>> pharmacyIdListWithMedc = _cartService.processCart(cartMedc);
-        return pharmacyIdListWithMedc.Select(pharm => Tuple.Create(_pharmsRepo.GetPharmacy(pharm.Item1), pharm.Item2)).ToList();
+        return pharmacyIdListWithMedc.Select(pharm => Tuple.Create(_pharmsRepo.GetPharmacy(pharm.Item1), pharm.Item2))
+            .ToList();
     }
 
     [HttpPost("takeOrder")]

@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Persistance;
 using Persistance.Repositories;
 using Persistance.Repositories.Booking;
+using Persistance.Repositories.User;
 
 namespace Application.Servicies;
 
@@ -13,6 +15,8 @@ public class BookingService
     private readonly IBookingRepo _bookingRepo;
     private readonly AppDbContext _context;
     private static List<MedcToPharm> medcToPharmList = new List<MedcToPharm>();
+    private readonly EmailService _email;
+    private readonly IUserRepository _userRepository;
 
     private static MapperConfiguration bookingConfig = new MapperConfiguration(cfg => cfg.CreateMap<CartDto, Booking>()
         .ForMember(booking => booking.UserId, act => act.MapFrom(cart => cart.UserId))
@@ -54,12 +58,14 @@ public class BookingService
     private Mapper bookingMapper = new Mapper(bookingConfig);
     private Mapper historyMapper = new Mapper(historyConfig);
 
-    public BookingService(IMedcToPharmRepo medcToPharmRepo, IBookingRepo bookingRepo, AppDbContext context)
+    public BookingService(IMedcToPharmRepo medcToPharmRepo, IBookingRepo bookingRepo, EmailService email,AppDbContext context, IUserRepository userRepository)
     {
         _medcToPharmRepo = medcToPharmRepo;
         _bookingRepo = bookingRepo;
         _context = context;
+        _email = email;
         medcToPharmList = _medcToPharmRepo.GetAllMedsToPharm();
+        _userRepository = userRepository;
     }
     
     public async Task bookOrder(CartDto order)
@@ -77,6 +83,20 @@ public class BookingService
 
     public async Task<List<HistoryDto>> showOrders()
     {
+        return (await _bookingRepo.getAllUsersBooking())
+            .Select(booking => historyMapper.Map<Booking,HistoryDto>(booking))
+            .ToList();
+    }
+
+    public async Task<List<HistoryDto>> ordersByPharm(int managerId)
+    {
+        var pharmId = await _userRepository.FindPharmAsync(managerId);
+        if (pharmId != 0)
+        {
+            return (await _bookingRepo.getAllUsersBookingByPharm(pharmId))
+                .Select(booking => historyMapper.Map<Booking,HistoryDto>(booking))
+                .ToList();
+        }
         return (await _bookingRepo.getAllUsersBooking())
             .Select(booking => historyMapper.Map<Booking,HistoryDto>(booking))
             .ToList();
@@ -118,14 +138,26 @@ public class BookingService
 
                 _context.Bookings.Attach(booking);
                 booking.Status = "Cancelled";
+                
+
             }
             finally
             {
+                SendEmailToUser(booking.UserId, booking.Status);
                 await _context.SaveChangesAsync();
             }
-            
-            
         }
 
+    }
+
+    public async Task SendEmailToUser(int userId, string status)
+    {
+        var message = new EmailDto()
+        {
+            To = await _bookingRepo.getUserEmailById(userId),
+            Subject = "Change order status",
+            Body = string.Format("Your order status has been changed to '{0}'", status) 
+        };
+        _email.SendEmail(message);
     }
 }

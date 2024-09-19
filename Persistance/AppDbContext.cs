@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistance
 {
-    public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int,
+        IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>,
+        IdentityUserToken<int>>
     {
         public DbSet<Pharmacy> Pharmacies { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
@@ -235,6 +237,26 @@ namespace Persistance
                 .HasOne(c => c.Booking)
                 .WithMany(o => o.Orders)
                 .HasForeignKey(b => b.BookingId);
+
+
+            modelBuilder.Entity<UserRole>(p =>
+            {
+                p.Property(u => u.AssignDate).IsRequired();
+                p.Property(u => u.PharmId).IsRequired(false);
+            });
+
+            //modelBuilder.Entity<Pharmacy>()
+            //    .HasMany(p => p.UserRoles)
+            //    .WithOne(u => u.Pharmacy)
+            //    .HasForeignKey(u => u.PharmId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(p => p.Pharmacy)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(u => u.PharmId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
         }
 
     }
